@@ -7,12 +7,12 @@ A small wrapper script can be used to turn this into a cli.
 
 e.g.
 ```typescript
+// gen-sql.ts
 import {
   genCreateSqlSchema,
-// } from "https://deno.land/x/adllang_adl_tools_deno@v0.1/mod.ts";
-} from "./adl-tools-deno/mod.ts";
-export * as path from "https://deno.land/std@0.224.0/path/mod.ts";
-export { parseArgs } from "https://deno.land/std@0.224.0/cli/parse_args.ts";
+} from "https://deno.land/x/adllang_adl_tools_deno@v0.1/mod.ts";
+// } from "../adl-tools-deno/mod.ts";
+import { parseArgs } from "https://deno.land/std@0.224.0/cli/parse_args.ts";
 
 async function main() {
 
@@ -22,7 +22,6 @@ async function main() {
     ],
     string: [
       "outputdir",
-      "merge_adlext",
       "verbose",
       "createFile",
       "viewsFile",
@@ -51,5 +50,18 @@ main()
   .catch((err) => {
     console.error("error in main", err);
   });
+```
 
+You can then use deno to run this from the command line. e.g.
+```bash
+mkdir -p sql/create
+deno run --allow-write --allow-run --allow-read \
+  ./gen-sql.ts \
+  --searchdir=adl \
+  --searchdir=../../packages/helix-common/adl \
+  --outputdir=sql \
+  --createFile=sql/create/V01__create.sql \
+  --viewsFile=sql/create/V02__views.sql \
+  --metadataFile=sql/create/V03__metadata.sql \
+  `find adl -name "*.adl"`
 ```
